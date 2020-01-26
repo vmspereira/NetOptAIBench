@@ -1,0 +1,677 @@
+<!--
+  /**
+  * Copyright 2012-2017,
+  * Centro Algoritmi
+  * University of Minho
+  *
+  * This is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This code is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU Public License for more details.
+  *
+  * You should have received a copy of the GNU Public License
+  * along with this code.  If not, see <http://www.gnu.org/licenses/>.
+  * 
+  * @author Vítor Pereira
+  */
+-->
+<plugin start="true">
+	<uid>pt.uminho.netopt.aibench</uid>
+	<name>NetOPT Plugin</name>
+	<version>1.1</version>
+	<lifecycleclass>pt.uminho.netopt.aibench.LifeCycle</lifecycleclass>
+	<extensions>
+
+<!-- =====MENUS==================================================================== -->
+
+		
+<!--  		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.newOp.NewEmptyProjectOp">
+			<operation-description name="New Blank Project"
+				path="1@File/1@New/" uid="pt.uminho.netopt.aibench.operations.newOp.NewEmptyProjectId" />
+		</extension>
+-->		
+
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.newop.NewProjectOp">
+			<operation-description name="New Project"
+				path="1@File/" uid="pt.uminho.netopt.aibench.operations.newop.NewProjectId" shortcut="1"/>
+		</extension>
+
+		
+		<extension  uid="aibench.workbench"   name="aibench.workbench.view" >
+		<icon-operation  operation="pt.uminho.netopt.aibench.operations.newop.NewProjectId"   icon="images/new15.png"/>
+        <big-icon-operation operation="pt.uminho.netopt.aibench.operations.newop.NewProjectId" icon="images/new32.png"/>
+		</extension>
+
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.newop.NewProjectFromTopology">
+			<operation-description name="New Project from topology"
+				path="1@File/" uid="pt.uminho.netopt.aibench.operations.newop.NewProjectFromTopologyId" />
+		</extension>
+
+
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.load.LoadDemandsOp">
+			<operation-description name="Load Demands"
+				path="1@File/" uid="pt.uminho.netopt.aibench.operations.load.LoadDemandsId" shortcut="2"/>
+		</extension>
+
+		<extension  uid="aibench.workbench"   name="aibench.workbench.view" >
+		<icon-operation  operation="pt.uminho.netopt.aibench.operations.load.LoadDemandsId"   icon="images/open15.png"/>
+        <big-icon-operation operation="pt.uminho.netopt.aibench.operations.load.LoadDemandsId" icon="images/open32.png"/>
+		</extension>
+		
+ 
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.load.LoadDelayRequestsOp">
+			<operation-description name="Load Delay Requests"
+				path="1@File/" uid="pt.uminho.netopt.aibench.operations.load.LoadDelayRequestsId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.load.LoadOSPFWeightsOp">
+			<operation-description name="Load Weights"
+				path="1@File/" uid="pt.uminho.netopt.aibench.operations.load.LoadOSPFWeightsId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.saveop.SaveDemandsOp">
+			<operation-description name="Save Demands"
+				path="1@File/" uid="pt.uminho.netopt.aibench.operations.saveop.SaveDemandsID" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.saveop.SaveDelayRequestsOp">
+			<operation-description name="Save Delay Requests"
+				path="1@File/" uid="pt.uminho.netopt.aibench.operations.saveop.SaveDelayRequestsId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.saveop.SaveOSPFWeightsOp">
+			<operation-description name="Save OSPF Weights"
+				path="1@File/" uid="pt.uminho.netopt.aibench.operations.saveop.SaveOSPFWeightsId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.saveop.SaveLoadsOp">
+			<operation-description name="Save Loads" path="1@File/"
+				uid="pt.uminho.netopt.aibench.operations.saveop.SaveLoadsId" />
+		</extension>
+		
+ 	
+
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.weights.InvCapOp">
+			<operation-description name="InvCap heuristic"
+				path="2@Generate/1@LS Weights/" uid="pt.uminho.netopt.aibench.operations.weightGen.weightGenId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.weights.UnitOp">
+			<operation-description name="Unit weights"
+				path="2@Generate/1@LS Weights/" uid="pt.uminho.netopt.aibench.operations.weightGen.UnitId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.weights.L2Op">
+			<operation-description name="L2 heuristic"
+				path="2@Generate/1@LS Weights/" uid="pt.uminho.netopt.aibench.operations.weightGen.L2Id" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.weights.RandomOp">
+			<operation-description name="Random weights"
+				path="2@Generate/1@LS Weights/" uid="pt.uminho.netopt.aibench.operations.weightGen.RandomId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.newop.RandomDemandsOp">
+			<operation-description name="Random Demands"
+				path="2@Generate/" uid="pt.uminho.netopt.aibench.operations.newOp.RandomDemandsId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.newop.RandomDelayRequestsOp">
+			<operation-description name="Random Delay Requests"
+				path="2@Generate/" uid="pt.uminho.netopt.aibench.operations.newOp.RandomDelayRequestsId" />
+		</extension>
+		
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.weights.RandomPValuesOp">
+			<operation-description name="Random Node-p Values"
+				path="2@Generate/" uid="pt.uminho.netopt.aibench.operations.weightGen.RandomPId" />
+		</extension>
+
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.simulate.ComputeLoadsOp">
+			<operation-description name="Loads"
+				path="2@Simulation/" uid="pt.uminho.netopt.aibench.operations.simulate.ComputeLoadsId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.simulate.ComputeLoadsMTOp">
+			<operation-description name="MT Loads"
+				path="2@Simulation/" uid="pt.uminho.netopt.aibench.operations.simulate.ComputeLoadsMTId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.simulate.ComputeDelaysOp">
+			<operation-description name="Delays"
+				path="2@Simulation/" uid="pt.uminho.netopt.aibench.operations.simulate.ComputeDelaysId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.simulate.ComputeLDOp">
+			<operation-description name="Loads and Delays"
+				path="2@Simulation" uid="pt.uminho.netopt.aibench.operations.simulate.ComputeLDId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.simulate.ComputeLoadsSROp">
+			<operation-description name="SR Loads"
+				path="2@Simulation" uid="pt.uminho.netopt.aibench.operations.simulate.ComputeLoadsSRId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.simulate.ComputeLoadsSRPValueOp">
+			<operation-description name="SR Loads PValue"
+				path="2@Simulation/" uid="pt.uminho.netopt.aibench.operations.simulate.ComputeLoadsSRPValueId" />
+		</extension>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.simulate.SRSimulatorOp">
+			<operation-description name="SR Simulator"
+				path="2@Simulation/" uid="pt.uminho.netopt.aibench.operations.simulate.SRSimulatorId" shortcut="3"/>
+		</extension>
+
+	    <extension  uid="aibench.workbench"   name="aibench.workbench.view" >
+		<icon-operation  operation="pt.uminho.netopt.aibench.operations.simulate.SRSimulatorId"   icon="images/sr15.png"/>
+        <big-icon-operation operation="pt.uminho.netopt.aibench.operations.simulate.SRSimulatorId" icon="images/sr32.png"/>
+		</extension>
+		
+
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.CongestionOp">
+			<operation-description name="Demands and Delays"
+				path="3@IP|SDN Optimization/" uid="pt.uminho.netopt.aibench.operations.optimize.EvoAlgoSingleObjectiveId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.LinkFailureOp">
+			<operation-description name="Link Failure"
+				path="3@IP|SDN Optimization/" uid="pt.uminho.netopt.aibench.operations.optimize.LFEvoAlgoSingleObjectiveId" />
+		</extension>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.HybridCongestionOp">
+			<operation-description name="Hybrid IP/SDN"
+				path="3@IP|SDN Optimization/" uid="pt.uminho.netopt.aibench.operations.optimize.HybridCongestionId" />
+		</extension>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.MultiLayerOp">
+			<operation-description name="Two Multi Topology"
+				path="3@IP|SDN Optimization/1@MT OSPF/" uid="pt.uminho.netopt.aibench.operations.optimize.MultiLayerId" />
+		</extension>
+		
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.PDEFTPValuesOp">
+			<operation-description name="Node-p Values"
+				path="3@IP|SDN Optimization/" uid="pt.uminho.netopt.aibench.operations.optimize.PDEFTPValuesOpId" />
+		</extension>
+		
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.NMultiLayerOp">
+			<operation-description name="N Multi Topology"
+				path="3@IP|SDN Optimization/1@MT OSPF/" uid="pt.uminho.netopt.aibench.operations.optimize.NMultiLayerId" />
+		</extension>
+		
+		
+		
+		
+		<!--  
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.PDEFTPValuesOp">
+			<operation-description name="Node-p Values Optimization"
+		     uid="pt.uminho.netopt.aibench.operations.optimize.PValuesOpId" />
+		</extension>
+		-->
+		
+		<!--  
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.PDEFTWeightsAndPValuesOp">
+			<operation-description name="Weights and Node-p Values Optimization"
+				path="3@LS Optimization/2@Node-p Values/" uid="pt.uminho.netopt.aibench.operations.optimize.PDEFTWeightsAndPValuesOpId" />
+		</extension>
+		
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.PDEFTWeightsAndPValuesMOOp">
+			<operation-description name="Weights and P Values Optimization"
+				path="3@LS Optimization/2@Node-p Values/" uid="pt.uminho.netopt.aibench.operations.optimize.PDEFTWeightsAndPValuesMOOpId" />
+		</extension>
+		
+		-->
+ 	
+		
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.SROp">
+			<operation-description name="Single Adjacency Optimization"
+				path="4@SR Optimization/" uid="pt.uminho.netopt.aibench.operations.optimize.SRId" />
+		</extension>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.SRLFOp">
+			<operation-description name="Single Link Failure "
+				path="4@SR Optimization/" uid="pt.uminho.netopt.aibench.operations.optimize.SRLFId" />
+		</extension>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.SRPValuesOp">
+			<operation-description name="SR P Values Optimization"
+				path="4@SR Optimization/" uid="pt.uminho.netopt.aibench.operations.optimize.SRPValuesOpId" />
+		</extension>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.SRPValuesSimulatorOp">
+			<operation-description name="SR P Values Optimization"  uid="pt.uminho.netopt.aibench.operations.optimize.SRPValuesSimulatorOpId" />
+		</extension>
+		
+		
+				
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.utils.OptionsOp">
+			<operation-description name="Options"
+				path="8@Help/" uid="pt.uminho.netopt.aibench.operations.options.OptionsId" shortcut="10"/>
+		</extension>
+		
+
+		<extension  uid="aibench.workbench"   name="aibench.workbench.view" >
+		<icon-operation  operation="pt.uminho.netopt.aibench.operations.options.OptionsId"   icon="images/wheel15.png"/>
+        <big-icon-operation operation="pt.uminho.netopt.aibench.operations.options.OptionsId" icon="images/wheel32.png"/>
+		</extension>
+		
+		
+		
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.statistics.WeightsComparisonOp">
+			<operation-description name="Weights Comparison"
+				path="5@Analysis/" uid="pt.uminho.netopt.aibench.operations.statistics.WeightsComparisonOpId" />
+		</extension>
+		
+		<extension  uid="aibench.workbench"   name="aibench.workbench.view" >
+		<icon-operation  operation="pt.uminho.netopt.aibench.operations.statistics.WeightsComparisonOpId"   icon="images/wc15.png"/>
+        <big-icon-operation operation="pt.uminho.netopt.aibench.operations.statistics.WeightsComparisonOpId" icon="images/wc32.png"/>
+		</extension>
+		
+		
+		<!--  
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.statistics.QualityEvaluationOp">
+			<operation-description name="Populations Comparison"
+				path="5@Analysis/" uid="pt.uminho.netopt.aibench.operations.statistics.QualityEvaluationOpId" />
+		</extension>
+		
+		<extension  uid="aibench.workbench"   name="aibench.workbench.view" >
+		<icon-operation  operation="pt.uminho.netopt.aibench.operations.statistics.QualityEvaluationOpId"   icon="images/pc15.png"/>
+        <big-icon-operation operation="pt.uminho.netopt.aibench.operations.statistics.QualityEvaluationOpId" icon="images/pc32.png"/>
+		</extension>
+		
+		-->
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.statistics.WeightsGraphOp">
+			<operation-description name="Load Balancing Analisys"
+				path="5@Analysis/" uid="pt.uminho.netopt.aibench.operations.statistics.WeightsGraphOpId" />
+		</extension>
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.statistics.MatrixCorrelationOp">
+			<operation-description name="Demands Linear Correlation"
+				path="5@Analysis/" uid="pt.uminho.netopt.aibench.operations.statistics.MatrixCorrelationOpId" />
+		</extension>
+		
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.utils.TransformDemandOp">
+			<operation-description name="Change Demands"
+				path="6@Utils/Demands/" uid="pt.uminho.netopt.aibench.operations.utils.TransformDemandOpId" />
+		</extension>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.utils.OverloadDemandOp">
+			<operation-description name="Overload Demands Link"
+				path="6@Utils/Demands/" uid="pt.uminho.netopt.aibench.operations.utils.OverloadDemandOpId" />
+		</extension>
+
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.utils.AddDemandOp">
+			<operation-description name="Add Demands"
+				path="6@Utils/Demands/" uid="pt.uminho.netopt.aibench.operations.utils.AddDemandOpId" />
+		</extension>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.utils.LinearDemandOp">
+			<operation-description name="Linear Demands"
+				path="6@Utils/Demands/" uid="pt.uminho.netopt.aibench.operations.utils.LinearDemandOpId" />
+		</extension>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.utils.SplitDemandOp">
+			<operation-description name="Split Demands"
+				path="6@Utils/Demands/" uid="pt.uminho.netopt.aibench.operations.utils.SplitDemandOpId" />
+		</extension>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.utils.SymetricDemandOp">
+			<operation-description name="Symetric Demand"
+				path="6@Utils/Demands/" uid="pt.uminho.netopt.aibench.operations.utils.SymetricDemandOpId" />
+		</extension>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.utils.NewCustomPopulationOp">
+			<operation-description name="New Custom Population"
+				path="6@Utils/Population/" uid="pt.uminho.netopt.aibench.operations.utils.NewCustomPopulationOpId" />
+		</extension>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.utils.AddWeightsToPopulationOp">
+			<operation-description name="Add Weight Configuration"
+				path="6@Utils/Population/" uid="pt.uminho.netopt.aibench.operations.utils.AddWeightsToPopulationOpId" />
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Weights View" datatype="pt.uminho.algoritmi.netopt.ospf.simulation.OSPFWeights"
+				class="pt.uminho.netopt.aibench.views.WeightsView" />
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="P Values View" datatype="pt.uminho.algoritmi.netopt.ospf.simulation.PValues"
+				class="pt.uminho.netopt.aibench.views.PValuesView" />
+		</extension>
+
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Population View" datatype="pt.uminho.algoritmi.netopt.ospf.simulation.Population"
+				class="pt.uminho.netopt.aibench.views.PopulationView" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Demands View" datatype="pt.uminho.algoritmi.netopt.ospf.simulation.Demands"
+				class="pt.uminho.netopt.aibench.views.DemandsView" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Simulation Results view" datatype="pt.uminho.netopt.aibench.datatypes.ResultSimulType"
+				class="pt.uminho.netopt.aibench.views.ResultSimulView" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Network Loads View" datatype="pt.uminho.algoritmi.netopt.ospf.simulation.NetworkLoads"
+				class="pt.uminho.netopt.aibench.views.NetworkLoadsView" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Average End to End Delays View" datatype="pt.uminho.algoritmi.netopt.ospf.simulation.AverageEndtoEndDelays"
+				class="pt.uminho.netopt.aibench.views.AverageDelaysView" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Optimization Results View" 
+				datatype="pt.uminho.netopt.aibench.datatypes.ResultOptimType"
+				class="pt.uminho.netopt.aibench.views.ResultOptimView" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Weights Comparison View" 
+				datatype="pt.uminho.netopt.aibench.datatypes.WeightsComparison"
+				class="pt.uminho.netopt.aibench.views.WeightsComparisonView" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Populations Comparison View" 
+				datatype="pt.uminho.netopt.aibench.datatypes.PopulationsComparison"
+				class="pt.uminho.netopt.aibench.views.PopulationsComparisonView" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Path Compararison view" 
+				datatype="pt.uminho.netopt.aibench.datatypes.WeightsComparison"
+				class="pt.uminho.netopt.aibench.views.OSPFPathGraphView" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Path View" 
+				datatype="pt.uminho.netopt.aibench.datatypes.WeightsGraph"
+				class="pt.uminho.netopt.aibench.views.WeightsGraphPathView" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="NetworkTopology Graph View" datatype="pt.uminho.netopt.aibench.datatypes.NetworkTopologyBox"
+				class="pt.uminho.netopt.aibench.views.TopologyGraph" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Nodes Table View" datatype="pt.uminho.netopt.aibench.datatypes.NetworkTopologyBox"
+				class="pt.uminho.netopt.aibench.views.TopologyNodesTable" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Edges Table View" datatype="pt.uminho.netopt.aibench.datatypes.NetworkTopologyBox"
+				class="pt.uminho.netopt.aibench.views.TopologyEdgesTable" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Graph Information View" datatype="pt.uminho.algoritmi.netopt.ospf.simulation.net.NetGraph"
+				class="pt.uminho.netopt.aibench.views.NetView" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="SR Configuration View" 
+				datatype="pt.uminho.algoritmi.netopt.ospf.simulation.sr.SRConfiguration"
+				class="pt.uminho.netopt.aibench.views.SRConfigurationView" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="Delay Requests View" datatype="pt.uminho.algoritmi.netopt.ospf.simulation.DelayRequests"
+				class="pt.uminho.netopt.aibench.views.DelayRequestsView" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<view name="SR Simulator View" datatype="pt.uminho.algoritmi.netopt.ospf.simulation.sr.SRSimulator"
+				class="pt.uminho.netopt.aibench.views.SRSimulatorView" />
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.algoritmi.netopt.ospf.simulation.OSPFWeights"
+				icon="images/weights15.png" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.OSPFWeightsBox"
+				icon="images/weights15.png" />
+		</extension>
+
+
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.algoritmi.netopt.ospf.simulation.Demands" icon="images/demands15.png" />
+		</extension>
+
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.DemandsBox"
+				icon="images/demands15.png" />
+		</extension>
+		
+		
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.algoritmi.netopt.ospf.simulation.DelayRequests"
+				icon="images/delayR15.png" />
+		</extension>
+ 
+ 
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.DelayRequestsBox"
+				icon="images/delayR15.png" />
+		</extension>
+
+ 
+	    
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.ResultSimulBox"
+				icon="images/resultSim15.png" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.ResultSimulType"
+				icon="images/resultSim15.png" />
+		</extension>
+
+
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.ResultOptimBox"
+				icon="images/resultOpt15.png" />
+		</extension>
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.ResultOptimType"
+				icon="images/resultOpt15.png" />
+		</extension>
+ 
+ 
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.NetworkTopologyBox"
+				icon="images/netTop15.png" />
+		</extension>
+  
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.WeightsComparisonBox"
+				icon="images/wc15.png" />
+		</extension>
+				
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.WeightsComparison"
+				icon="images/wc15.png" />
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.PopulationBox"
+				icon="images/population15.png" />
+		</extension>
+		
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.algoritmi.netopt.ospf.simulation.Population"
+				icon="images/population15.png" />
+		</extension>
+
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.algoritmi.netopt.ospf.simulation.NetworkLoads"
+				icon="images/load15.png" />
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.NetworkLoadBox"
+				icon="images/load15.png" />
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.ProjectBox"
+				icon="images/projB15.png" />
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.SRConfigurationBox"
+				icon="images/tags15.png" />
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.algoritmi.netopt.ospf.simulation.sr.SRConfiguration"
+				icon="images/tags15.png" />
+		</extension>
+		
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.PValuesBox"
+				icon="images/p15.png" />
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.algoritmi.netopt.ospf.simulation.PValues"
+				icon="images/p15.png" />
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.WeightsGraphBox"
+				icon="images/path15.png" />
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.WeightsGraph"
+				icon="images/path15.png" />
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.PopulationsComparison"
+				icon="images/pc15.png" />
+		</extension>
+		
+		<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.PopulationsComparisonBox"
+				icon="images/pc15.png" />
+		</extension>
+	 	
+	 	<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.netopt.aibench.datatypes.SRSimulatorBox"
+				icon="images/sr15.png" />
+		</extension>
+	 	
+	 	<extension uid="aibench.workbench" name="aibench.workbench.view">
+			<icon-datatype datatype="pt.uminho.algoritmi.netopt.ospf.simulation.sr.SRSimulator"
+				icon="images/sr15.png" />
+		</extension>
+	 	
+	 	
+		<extension 	uid="aibench.workbench" 
+						name="aibench.workbench.view" >
+						<gui-operation  operation="pt.uminho.netopt.aibench.operations.optimize.EvoAlgoSingleObjectiveId"
+										class="pt.uminho.netopt.aibench.gui.operations.OptimizationOpGui"
+						/>
+		</extension>
+		
+		<extension 	uid="aibench.workbench" 
+						name="aibench.workbench.view" >
+						<gui-operation  operation="pt.uminho.netopt.aibench.operations.options.OptionsId"
+										class="pt.uminho.netopt.aibench.gui.options.OptionDialog"
+						/>
+		</extension>
+		
+		<extension 	uid="aibench.workbench" 
+						name="aibench.workbench.view" >
+						<gui-operation  operation="pt.uminho.netopt.aibench.operations.optimize.LFEvoAlgoSingleObjectiveId"
+										class="pt.uminho.netopt.aibench.gui.operations.LFOptimizationOpGui"
+						/>
+		</extension>
+		
+		<extension 	uid="aibench.workbench" 
+						name="aibench.workbench.view" >
+						<gui-operation  operation="pt.uminho.netopt.aibench.operations.optimize.SRId"
+										class="pt.uminho.netopt.aibench.gui.operations.SROptimizationOpGui"
+						/>
+		</extension>
+		
+		<extension 	uid="aibench.workbench" 
+						name="aibench.workbench.view" >
+						<gui-operation  operation="pt.uminho.netopt.aibench.operations.optimize.SRLFId"
+										class="pt.uminho.netopt.aibench.gui.operations.SRLFOptimizationOpGui"
+						/>
+		</extension>
+		
+		
+		<extension 	uid="aibench.workbench" 
+						name="aibench.workbench.view" >
+						<gui-operation  operation="pt.uminho.netopt.aibench.operations.newop.NewProjectId"
+										class="pt.uminho.netopt.aibench.gui.operations.NewProjectOpGui"
+						/>
+		</extension>
+	 
+				
+	</extensions>
+</plugin>
