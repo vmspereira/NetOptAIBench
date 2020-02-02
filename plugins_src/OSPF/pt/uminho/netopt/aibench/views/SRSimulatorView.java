@@ -67,12 +67,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 
 import pt.uminho.algoritmi.netopt.SystemConf;
+import pt.uminho.algoritmi.netopt.cplex.SRLoadBalancingPhiSolver;
 import pt.uminho.algoritmi.netopt.cplex.SRLoadBalancingSolver;
 import pt.uminho.algoritmi.netopt.ospf.graph.Graph;
 import pt.uminho.algoritmi.netopt.ospf.graph.Graph.Status;
 import pt.uminho.algoritmi.netopt.ospf.listener.TopologyChangeListener;
 import pt.uminho.algoritmi.netopt.ospf.listener.TopologyEvent;
 import pt.uminho.algoritmi.netopt.ospf.simulation.Demands;
+import pt.uminho.algoritmi.netopt.ospf.simulation.NetworkLoads;
 import pt.uminho.algoritmi.netopt.ospf.simulation.NetworkTopology;
 import pt.uminho.algoritmi.netopt.ospf.simulation.OSPFWeights;
 import pt.uminho.algoritmi.netopt.ospf.simulation.PValues;
@@ -530,11 +532,13 @@ public class SRSimulatorView extends javax.swing.JPanel implements InputGUI {
 
 				if (lb_ea_bt.isSelected()) {
 
-					int n = JOptionPane.showOptionDialog(view, "Run \u03A6* (node-p) optimization?", "Input",
+					int n = JOptionPane.showOptionDialog(view, "Run \u03A6* optimization?", "Input",
 							JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 					if (n == JOptionPane.OK_OPTION) {
+						/**
 						try {
 
+							
 							Demands d = srSimul.getDemands(FlowType.SALP);
 							OSPFWeights weights = srSimul.getWeights();
 							int node_p_iterations = SystemConf.getPropertyInt("srsimulator.piterations", 100);
@@ -584,11 +588,34 @@ public class SRSimulatorView extends javax.swing.JPanel implements InputGUI {
 							};
 
 							Workbench.getInstance().executeOperation(op, handler, paramsSpec);
+						
 
 						} catch (Exception e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
+						**/
+						try{
+							Workbench.getInstance().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+							Demands d = srSimul.getDemands(FlowType.SALP);
+							OSPFWeights weights = srSimul.getWeights();
+							SRLoadBalancingPhiSolver solver = new SRLoadBalancingPhiSolver(srSimul.getTopology().copy(),weights,d);
+							solver.setSaveLoads(true);
+							solver.setUpdateConfiguration(true);
+							solver.setDebug(false);
+							solver.optimize();
+							srSimul.clear(FlowType.SALP);
+							srSimul.apply(solver.getSRConfiguration(), d);
+							updateView();
+							Workbench.getInstance().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+						}
+						catch(Exception exp){
+							exp.printStackTrace();
+						}
+						synchronized (srSimul) {
+							srSimul.notify();
+						}
+
 
 					}
 
@@ -604,7 +631,8 @@ public class SRSimulatorView extends javax.swing.JPanel implements InputGUI {
 							OSPFWeights weights = srSimul.getWeights();
 							SRLoadBalancingSolver solver = new SRLoadBalancingSolver(srSimul.getTopology().copy(),weights,d);
 							solver.setSaveLoads(true);
-							solver.setDebug(true);
+							solver.setUpdateConfiguration(true);
+							solver.setDebug(false);
 							solver.optimize();
 							srSimul.clear(FlowType.SALP);
 							srSimul.apply(solver.getSRConfiguration(), d);
@@ -625,8 +653,22 @@ public class SRSimulatorView extends javax.swing.JPanel implements InputGUI {
 
 	buttons.add(jb);buttons.add(bclean);toolbar.add(buttons);toolbar.add(panelPvalues);
 
-	JToolBar toolb = new JToolBar("Toolbar", JToolBar.HORIZONTAL);toolb.add(toolbar);
+	JPanel p_loads = new JPanel();
+	p_loads.setBorder(BorderFactory.createTitledBorder("Network Loads"));
+	JButton save_loads = new JButton("Save");
+	save_loads.addActionListener(new ActionListener() {
 
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			NetworkLoads l = new NetworkLoads(srSimul.getLoads(),srSimul.getTopology().copy());
+			
+		}});
+
+	p_loads.add(save_loads);
+	toolbar.add(p_loads);
+	
+	
+	JToolBar toolb = new JToolBar("Toolbar", JToolBar.HORIZONTAL);toolb.add(toolbar);
 	toolb.setFloatable(false);return toolb;
 	}
 
@@ -650,7 +692,8 @@ public class SRSimulatorView extends javax.swing.JPanel implements InputGUI {
 
 	private void updateView() {
 		this.congestionLabel.setText("" + MathUtils.roundToDecimals(this.srSimul.getCongestionValue(), 2));
-		this.mluLabel.setText("" + MathUtils.roundToDecimals(this.srSimul.getMLU()*100, 2));
+		this.mluLabel.setText("" + MathUtils.roundToDecimals(this.srSimul.getMLU()*100, 1)+"%");
+		//System.out.println("Average Delay: "+this.srSimul.getAverageDelay());
 		super.repaint();
 		vv.repaint();
 		emodel.fireTableDataChanged();
