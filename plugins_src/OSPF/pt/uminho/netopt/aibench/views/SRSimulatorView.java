@@ -66,7 +66,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 
-import pt.uminho.algoritmi.netopt.SystemConf;
 import pt.uminho.algoritmi.netopt.cplex.SRLoadBalancingPhiSolver;
 import pt.uminho.algoritmi.netopt.cplex.SRLoadBalancingSolver;
 import pt.uminho.algoritmi.netopt.ospf.graph.Graph;
@@ -75,9 +74,9 @@ import pt.uminho.algoritmi.netopt.ospf.listener.TopologyChangeListener;
 import pt.uminho.algoritmi.netopt.ospf.listener.TopologyEvent;
 import pt.uminho.algoritmi.netopt.ospf.simulation.Demands;
 import pt.uminho.algoritmi.netopt.ospf.simulation.NetworkLoads;
-import pt.uminho.algoritmi.netopt.ospf.simulation.NetworkTopology;
 import pt.uminho.algoritmi.netopt.ospf.simulation.OSPFWeights;
 import pt.uminho.algoritmi.netopt.ospf.simulation.PValues;
+import pt.uminho.algoritmi.netopt.ospf.simulation.ResultSimul;
 import pt.uminho.algoritmi.netopt.ospf.simulation.net.NetEdge;
 import pt.uminho.algoritmi.netopt.ospf.simulation.net.NetNode;
 import pt.uminho.algoritmi.netopt.ospf.simulation.sr.Flow;
@@ -87,6 +86,7 @@ import pt.uminho.algoritmi.netopt.ospf.simulation.sr.Flow.FlowType;
 import pt.uminho.algoritmi.netopt.ospf.utils.MathUtils;
 import pt.uminho.algoritmi.netopt.ospf.simulation.net.NetNode.NodeType;
 import pt.uminho.netopt.aibench.datatypes.ProjectBox;
+import pt.uminho.netopt.aibench.datatypes.ResultSimulType;
 import pt.uminho.netopt.jung.*;
 import org.apache.commons.collections15.Transformer;
 
@@ -99,8 +99,6 @@ import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.DefaultVertexLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 import es.uvigo.ei.aibench.core.Core;
-import es.uvigo.ei.aibench.core.ParamSpec;
-import es.uvigo.ei.aibench.core.ProgressHandler;
 import es.uvigo.ei.aibench.core.clipboard.Clipboard;
 import es.uvigo.ei.aibench.core.clipboard.ClipboardItem;
 import es.uvigo.ei.aibench.core.clipboard.ClipboardListener;
@@ -535,66 +533,6 @@ public class SRSimulatorView extends javax.swing.JPanel implements InputGUI {
 					int n = JOptionPane.showOptionDialog(view, "Run \u03A6* optimization?", "Input",
 							JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 					if (n == JOptionPane.OK_OPTION) {
-						/**
-						try {
-
-							
-							Demands d = srSimul.getDemands(FlowType.SALP);
-							OSPFWeights weights = srSimul.getWeights();
-							int node_p_iterations = SystemConf.getPropertyInt("srsimulator.piterations", 100);
-							PValues pvalues = new PValues(srSimul.getTopology().getDimension());
-
-							ParamSpec[] paramsSpec = new ParamSpec[] {
-									new ParamSpec("Topology", NetworkTopology.class, srSimul.getTopology(), null),
-									new ParamSpec("PValues", PValues.class, pvalues, null),
-									new ParamSpec("Demands", Demands.class, d, null),
-									new ParamSpec("OSPFWeights", OSPFWeights.class, weights, null),
-									new ParamSpec("UseDeft", Boolean.class, true, null),
-									new ParamSpec("PopulationSize", Integer.class, 100, null),
-									new ParamSpec("ArchiveSize", Integer.class, 100, null),
-									new ParamSpec("NumberGenerations", Integer.class, node_p_iterations, null),
-									new ParamSpec("MinimizeMaxUsage", Boolean.class, true, null),
-									new ParamSpec("NumberOfRuns", Integer.class, 1, null), };
-
-							OperationDefinition op = Core.getInstance().getOperationById(
-									"pt.uminho.netopt.aibench.operations.optimize.SRPValuesSimulatorOpId");
-							ProgressHandler handler = new ProgressHandler() {
-
-								public void validationError(Throwable t) {
-								}
-
-								public void operationStart(Object progressBean, Object operationID) {
-								}
-
-								public void operationError(Throwable t) {
-								}
-
-								public void operationFinished(List<Object> results,
-										List<ClipboardItem> clipboardItems) {
-									try {
-										srSimul.apply(pvalues);
-										updateView();
-										ProjectBox project = (ProjectBox) Core.getInstance().getClipboard()
-												.getItemsByClass(ProjectBox.class).get(0).getUserData();
-										project.addPValues(pvalues);
-									} catch (Exception e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									synchronized (srSimul) {
-										srSimul.notify();
-									}
-								}
-							};
-
-							Workbench.getInstance().executeOperation(op, handler, paramsSpec);
-						
-
-						} catch (Exception e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						**/
 						try{
 							Workbench.getInstance().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 							Demands d = srSimul.getDemands(FlowType.SALP);
@@ -654,13 +592,21 @@ public class SRSimulatorView extends javax.swing.JPanel implements InputGUI {
 	buttons.add(jb);buttons.add(bclean);toolbar.add(buttons);toolbar.add(panelPvalues);
 
 	JPanel p_loads = new JPanel();
-	p_loads.setBorder(BorderFactory.createTitledBorder("Network Loads"));
+	p_loads.setBorder(BorderFactory.createTitledBorder("Loads"));
 	JButton save_loads = new JButton("Save");
 	save_loads.addActionListener(new ActionListener() {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			NetworkLoads l = new NetworkLoads(srSimul.getLoads(),srSimul.getTopology().copy());
+			l.setCongestion(srSimul.getCongestionValue());
+			List<ClipboardItem> items =Core.getInstance().getClipboard()
+	        .getItemsByClass(ProjectBox.class);
+			ResultSimul results = new ResultSimul();
+			results.addNetworkLoads(l);
+			ResultSimulType resultsT = new ResultSimulType(results);
+			if(items.size()>0)
+				((ProjectBox)(items.get(0).getUserData())).addResultSimul(resultsT);
 			
 		}});
 

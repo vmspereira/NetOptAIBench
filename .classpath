@@ -24,7 +24,7 @@
 	<classpathentry kind="lib" path="plugins_bin/aibench-pluginmanager-2.10.2.jar"/>
 	<classpathentry kind="lib" path="plugins_bin/aibench-core-2.10.2.jar"/>
 	<classpathentry kind="lib" path="plugins_bin/aibench-workbench-2.10.2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NetOpt-JEcoli"/>
 	<classpathentry kind="lib" path="C:/Program Files/IBM/ILOG/CPLEX_Studio129/cplex/lib/cplex.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NetOptJEcoli"/>
 	<classpathentry kind="output" path="plugins_bin/OSPF"/>
 </classpath>
