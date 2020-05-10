@@ -53,6 +53,8 @@ import es.uvigo.ei.aibench.workbench.Workbench;
 import es.uvigo.ei.aibench.workbench.utilities.Utilities;
 import pt.uminho.algoritmi.netopt.ospf.optimization.Params;
 import pt.uminho.algoritmi.netopt.ospf.optimization.Params.AlgorithmSecondObjective;
+import pt.uminho.algoritmi.netopt.ospf.optimization.Params.AlgorithmSelectionOption;
+import pt.uminho.algoritmi.netopt.ospf.simulation.DelayRequests;
 import pt.uminho.algoritmi.netopt.ospf.simulation.Demands;
 import pt.uminho.algoritmi.netopt.ospf.simulation.Population;
 import pt.uminho.algoritmi.netopt.ospf.simulation.net.NetNode.NodeType;
@@ -60,7 +62,7 @@ import pt.uminho.netopt.aibench.datatypes.ProjectBox;
 import pt.uminho.netopt.aibench.gui.utils.text.NumberTextField;
 
 
-public class SROptimizationLPOpGui extends JDialog implements ActionListener,
+public class SROptimizationOpGui extends JDialog implements ActionListener,
 		InputGUI {
 
 	/**
@@ -68,21 +70,28 @@ public class SROptimizationLPOpGui extends JDialog implements ActionListener,
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
+	private NumberTextField alphaFld;
 	private NumberTextField achiveSizeFld;
+	private JRadioButton delayRadioBt;
 	private JRadioButton demandsRadioBt;
 	private JRadioButton mluRadioBt;
+	private JRadioButton aluRadioBt;
 	private JComboBox<ClipboardItem> firstObjectiveBox;
 	private JCheckBox invcapCheckBox;
 	private NumberTextField iterationsFld;
 	private JCheckBox l2CheckBox;
+	private JRadioButton nsgaiiRadioBt;
 	private NumberTextField percentPopFld;
 	private NumberTextField populSizeFld;
 	private JComboBox<ClipboardItem> populationBox;
 	private JComboBox<ClipboardItem> projectBox;
 	private NumberTextField runsFld;
 	private JCheckBox unitCheckBox;
+	private JComboBox<ClipboardItem> secondDelaysBox;
 	private JComboBox<ClipboardItem> secondDemandsBox;
+	private JRadioButton soeaRadioBt;
+	private JRadioButton spea2RadioBt;
+	private JCheckBox loadBalancer;
 	
 
 	JLabel alphaLabel;
@@ -94,7 +103,7 @@ public class SROptimizationLPOpGui extends JDialog implements ActionListener,
 
 	private ParamsReceiver rec;
 
-	public SROptimizationLPOpGui() {
+	public SROptimizationOpGui() {
 		super(Workbench.getInstance().getMainFrame());
 		initComponents();
 	}
@@ -122,12 +131,15 @@ public class SROptimizationLPOpGui extends JDialog implements ActionListener,
 		JPanel prevRunsPanel;
 		JLabel projecBoxLabel;
 		JLabel runsLabel;
+		JLabel secondDelaysLabel;
 		JLabel secondDemandsLabel;
 		JLabel secondObjectiveLabel;
 		JPanel secondObjectivePanel;
 		JTabbedPane seedingPanel;
 		JPanel traditionalPanel;
-		
+		//JPanel loadBalancerPanel;
+		//JLabel loadBalancerLabel;
+
 
 		projectPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		projectPanel.setBorder(BorderFactory.createTitledBorder("Project"));
@@ -174,10 +186,18 @@ public class SROptimizationLPOpGui extends JDialog implements ActionListener,
 		demandsRadioBt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				secondDelaysBox.setEnabled(false);
 				secondDemandsBox.setEnabled(true);
 			}
 		});
-		
+		delayRadioBt = new JRadioButton("Delay");
+		delayRadioBt.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				secondDelaysBox.setEnabled(true);
+				secondDemandsBox.setEnabled(false);
+			}
+		});
 		secondObjectiveLabel = new JLabel("Objective");
 		secondObjectiveLabel.setPreferredSize(preferredSize);
 
@@ -186,44 +206,101 @@ public class SROptimizationLPOpGui extends JDialog implements ActionListener,
 		mluRadioBt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				secondDelaysBox.setEnabled(false);
 				secondDemandsBox.setEnabled(false);
 			}
 		});
+		
+		
+		aluRadioBt = new JRadioButton("ALU");
+		aluRadioBt.setToolTipText("Minimize Average Link Utilization");
+		aluRadioBt.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				secondDelaysBox.setEnabled(false);
+				secondDemandsBox.setEnabled(false);
+			}
+		});
+		
+		
 		ButtonGroup secondGroup = new ButtonGroup();
-		secondGroup.add(mluRadioBt);
 		secondGroup.add(demandsRadioBt);
+		secondGroup.add(delayRadioBt);
+		secondGroup.add(mluRadioBt);
+		secondGroup.add(aluRadioBt);
 		
 		JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p1.add(secondObjectiveLabel);
-		p1.add(mluRadioBt);
 		p1.add(demandsRadioBt);
+		p1.add(delayRadioBt);
+		p1.add(mluRadioBt);
+		p1.add(aluRadioBt);
 		secondObjectivePanel.add(p1);
 
 		secondDemandsLabel = new JLabel("Demands");
 		secondDemandsLabel.setPreferredSize(preferredSize);
+		secondDelaysLabel = new JLabel("Delay");
+		secondDelaysLabel.setPreferredSize(preferredSize);
 		secondDemandsBox = new JComboBox<ClipboardItem>(
 				this.getItemsByClass(Demands.class));
 		secondDemandsBox.setPreferredSize(preferredSizeCombo);
+		secondDelaysBox = new JComboBox<ClipboardItem>(
+				this.getItemsByClass(DelayRequests.class));
+		secondDelaysBox.setPreferredSize(preferredSizeCombo);
 		JPanel p2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel p3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p2.add(secondDemandsLabel);
 		p2.add(secondDemandsBox);
-		
-		
+		p3.add(secondDelaysLabel);
+		p3.add(secondDelaysBox);
 		secondObjectivePanel.add(p2);
-	
+		secondObjectivePanel.add(p3);
 		this.getContentPane().add(
 				secondObjectivePanel,
 				new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 0, 0), 0, 0));
-		
-		demandsRadioBt.setSelected(false);
-		mluRadioBt.setSelected(true);
-		secondDemandsBox.setEnabled(false);
+		demandsRadioBt.setSelected(true);
+		secondDelaysBox.setEnabled(false);
+		secondDemandsBox.setEnabled(true);
 
 		
-				
-	
+		//------------------------------------------------------------------------------
+		
+		/*
+		loadBalancerPanel = new JPanel();
+		loadBalancerPanel.setLayout(new BoxLayout(loadBalancerPanel,
+				BoxLayout.Y_AXIS));
+		loadBalancerPanel.setBorder(BorderFactory
+				.createTitledBorder("Load Balancer"));
+
+
+		loadBalancerLabel= new JLabel();
+		loadBalancerLabel.setText("Use DEFT");
+		loadBalancerLabel.setPreferredSize(preferredSize);
+		
+		JPanel p12 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		
+		loadBalancer = new JCheckBox();
+		loadBalancer.setPreferredSize(preferredSizeCombo);
+		p12.add(loadBalancerLabel);
+		p12.add(loadBalancer);
+		loadBalancerPanel.add(p12);
+		
+		this.getContentPane().add(
+				loadBalancerPanel,
+				new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 0, 0), 0, 0));
+		
+		*/
+		//----------------------------------------------------------------------
+
+		
+		
+		
+		
+		
 		seedingPanel = new JTabbedPane();
 		seedingPanel.setBorder(BorderFactory.createTitledBorder("Seeding"));
 
@@ -269,7 +346,47 @@ public class SROptimizationLPOpGui extends JDialog implements ActionListener,
 		algoritmPanel = new JPanel();
 		algoritmPanel.setLayout(new BoxLayout(algoritmPanel, BoxLayout.Y_AXIS));
 		algoritmPanel.setBorder(BorderFactory.createTitledBorder("Algorithm"));
-				
+		soeaRadioBt = new JRadioButton("SOEA");
+		spea2RadioBt = new JRadioButton("SPEA2");
+		nsgaiiRadioBt = new JRadioButton("NSGAII");
+		alphaLabel = new JLabel("Alpha");
+		alphaFld = new NumberTextField(2);
+		alphaFld.setColumns(4);
+		alphaFld.setDouble(0.5);
+		ActionListener action = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (soeaRadioBt.isSelected()) {
+					alphaLabel.setEnabled(true);
+					alphaFld.setEnabled(true);
+				} else {
+					alphaLabel.setEnabled(false);
+					alphaFld.setEnabled(false);
+				}
+
+			}
+		};
+		this.soeaRadioBt.addActionListener(action);
+		this.spea2RadioBt.addActionListener(action);
+		this.nsgaiiRadioBt.addActionListener(action);
+		
+		this.nsgaiiRadioBt.setSelected(true);
+		alphaLabel.setEnabled(false);
+		alphaFld.setEnabled(false);
+
+		JPanel p4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p4.add(spea2RadioBt);
+		p4.add(nsgaiiRadioBt);
+		p4.add(soeaRadioBt);
+		p4.add(alphaLabel);
+		p4.add(alphaFld);
+		algoritmPanel.add(p4);
+
+		ButtonGroup algorithmGroup = new ButtonGroup();
+		algorithmGroup.add(this.nsgaiiRadioBt);
+		algorithmGroup.add(this.spea2RadioBt);
+		algorithmGroup.add(this.soeaRadioBt);
+
 		populSizeLabel = new JLabel("Population Size");
 		populSizeLabel.setPreferredSize(preferredSize);
 		archSizeLabel = new JLabel("Archive Size");
@@ -315,10 +432,10 @@ public class SROptimizationLPOpGui extends JDialog implements ActionListener,
 		buttonPanel.setLayout(new FlowLayout());
 		okButton = new JButton("Ok");
 		okButton.addActionListener(this);
-		okButton.setActionCommand(SROptimizationLPOpGui.OK_BUTTON_ACTION_COMMAND);
+		okButton.setActionCommand(SROptimizationOpGui.OK_BUTTON_ACTION_COMMAND);
 		cancelButton = new JButton("Cancel");
 		cancelButton
-				.setActionCommand(SROptimizationLPOpGui.CANCEL_BUTTON_ACTION_COMMAND);
+				.setActionCommand(SROptimizationOpGui.CANCEL_BUTTON_ACTION_COMMAND);
 		cancelButton.addActionListener(this);
 		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
@@ -357,7 +474,7 @@ public class SROptimizationLPOpGui extends JDialog implements ActionListener,
 	public void actionPerformed(ActionEvent e) {
 		String actionCommand = e.getActionCommand();
 		if (actionCommand
-				.equals(SROptimizationLPOpGui.OK_BUTTON_ACTION_COMMAND)) {
+				.equals(SROptimizationOpGui.OK_BUTTON_ACTION_COMMAND)) {
 			try {
 				if (projectBox.getSelectedItem() == null)
 					Workbench.getInstance().warn("Empty ProjectBox Set");
@@ -379,7 +496,7 @@ public class SROptimizationLPOpGui extends JDialog implements ActionListener,
 				e1.printStackTrace();
 			}
 		} else if (actionCommand
-				.equals(SROptimizationLPOpGui.CANCEL_BUTTON_ACTION_COMMAND)) {
+				.equals(SROptimizationOpGui.CANCEL_BUTTON_ACTION_COMMAND)) {
 			finish();
 		}
 
@@ -418,15 +535,27 @@ public class SROptimizationLPOpGui extends JDialog implements ActionListener,
 		} catch (NullPointerException e) {
 		}
 
-		
+		DelayRequests delays = new DelayRequests(0);
+		try {
+			ClipboardItem item = (ClipboardItem) this.secondDelaysBox
+					.getSelectedItem();
+			delays = (DelayRequests) item.getUserData();
+		} catch (NullPointerException e) {
+		}
 
+		Boolean useDEFT = true;//this.loadBalancer.isSelected();
 		
 		
 		
 		Params.AlgorithmSecondObjective secondObjective = Params.AlgorithmSecondObjective.DEMANDS;
-		if (this.mluRadioBt.isSelected()){
+		if (this.delayRadioBt.isSelected()){
+			secondObjective = Params.AlgorithmSecondObjective.DELAY;
+		}else if (this.mluRadioBt.isSelected()){
 			secondObjective = Params.AlgorithmSecondObjective.MLU;
+		}else if (this.aluRadioBt.isSelected()){
+			secondObjective = Params.AlgorithmSecondObjective.ALU;
 		}
+
 		Population population = new Population();
 		try {
 			ClipboardItem item = (ClipboardItem) this.populationBox
@@ -442,7 +571,16 @@ public class SROptimizationLPOpGui extends JDialog implements ActionListener,
 		Boolean l2 = this.l2CheckBox.isSelected();
 		Boolean unit = this.unitCheckBox.isSelected();
 
+		Params.AlgorithmSelectionOption algorithm;
+		if (this.nsgaiiRadioBt.isSelected())
+			algorithm = Params.AlgorithmSelectionOption.NSGAII;
+		else if (this.spea2RadioBt.isSelected())
+			algorithm = Params.AlgorithmSelectionOption.SPEA2;
+		else
+			algorithm = Params.AlgorithmSelectionOption.SOEA;
 		
+		Double alpha=this.alphaFld.getDouble();
+
 		Integer populationSize = this.populSizeFld.getDouble().intValue();
 		Integer archiveSize = this.achiveSizeFld.getDouble().intValue();
 		Integer iterations = this.iterationsFld.getDouble().intValue();
@@ -452,15 +590,21 @@ public class SROptimizationLPOpGui extends JDialog implements ActionListener,
 				new ParamSpec("ProjectBox", ProjectBox.class, project, null),
 				new ParamSpec("FirstDemands", Demands.class, demands1, null),
 				new ParamSpec("SecondDemands", Demands.class, demands2, null),
+				new ParamSpec("SecondDelay", DelayRequests.class, delays, null),
 				new ParamSpec("SecondObjective",
 						AlgorithmSecondObjective.class, secondObjective,
 						null),
+				new ParamSpec("UseDEFT",Boolean.class,useDEFT,null),
 				new ParamSpec("Population", Population.class, population, null),
 				new ParamSpec("PopulationPercentage", Double.class, popPercent,
 						null),
 				new ParamSpec("InvCap", Boolean.class, invcap, null),
 				new ParamSpec("L2", Boolean.class, l2, null),
 				new ParamSpec("Unit", Boolean.class, unit, null),
+				new ParamSpec("Algorithm",
+						AlgorithmSelectionOption.class, algorithm, null),
+				new ParamSpec("Alpha",
+								Double.class, alpha, null),		
 				new ParamSpec("PopulationSize", Integer.class, populationSize,
 						null),
 				new ParamSpec("ArchiveSize", Integer.class, archiveSize, null),

@@ -470,6 +470,19 @@ public class SRSimulatorView extends javax.swing.JPanel implements InputGUI {
 
 		});
 
+		JButton saveConf = new JButton("Save");
+		saveConf.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Clipboard clipboard = Core.getInstance().getClipboard();
+				List<ClipboardItem> projects = clipboard.getItemsByClass(ProjectBox.class);
+				ProjectBox prj = (ProjectBox)(projects.get(0).getUserData());
+				prj.addSRConfiguration(srSimul.getCurrentConfiguration());
+			}
+		});
+		
+		
 		JPanel panelPvalues = new JPanel();
 		panelPvalues.setBorder(BorderFactory.createTitledBorder("Load Balancing"));
 		JButton bp = new JButton("Load");
@@ -511,6 +524,10 @@ public class SRSimulatorView extends javax.swing.JPanel implements InputGUI {
 			}
 		});
 
+		
+		
+		
+		
 		JButton bp2 = new JButton("Optimize");
 		panelPvalues.add(bp2);
 
@@ -589,7 +606,8 @@ public class SRSimulatorView extends javax.swing.JPanel implements InputGUI {
 			}
 		});
 
-	buttons.add(jb);buttons.add(bclean);toolbar.add(buttons);toolbar.add(panelPvalues);
+	buttons.add(jb);buttons.add(bclean);buttons.add(saveConf);
+	toolbar.add(buttons);toolbar.add(panelPvalues);
 
 	JPanel p_loads = new JPanel();
 	p_loads.setBorder(BorderFactory.createTitledBorder("Loads"));

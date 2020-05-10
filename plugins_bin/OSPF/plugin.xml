@@ -278,6 +278,12 @@
 		</extension>
 		
 		<extension uid="aibench.core" name="aibench.core.operation-definition"
+			class="pt.uminho.netopt.aibench.operations.optimize.SRLPOp">
+			<operation-description name="Hybrid Single Adjacency Optimization"
+				path="4@SR Optimization/" uid="pt.uminho.netopt.aibench.operations.optimize.SRLPId" />
+		</extension>
+		
+		<extension uid="aibench.core" name="aibench.core.operation-definition"
 			class="pt.uminho.netopt.aibench.operations.optimize.SRLFOp">
 			<operation-description name="Single Link Failure "
 				path="4@SR Optimization/" uid="pt.uminho.netopt.aibench.operations.optimize.SRLFId" />
@@ -654,6 +660,13 @@
 						name="aibench.workbench.view" >
 						<gui-operation  operation="pt.uminho.netopt.aibench.operations.optimize.SRId"
 										class="pt.uminho.netopt.aibench.gui.operations.SROptimizationOpGui"
+						/>
+		</extension>
+		
+		<extension 	uid="aibench.workbench" 
+						name="aibench.workbench.view" >
+						<gui-operation  operation="pt.uminho.netopt.aibench.operations.optimize.SRLPId"
+										class="pt.uminho.netopt.aibench.gui.operations.SROptimizationLPOpGui"
 						/>
 		</extension>
 		

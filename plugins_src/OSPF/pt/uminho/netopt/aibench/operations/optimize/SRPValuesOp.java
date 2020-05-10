@@ -72,6 +72,7 @@ public class SRPValuesOp {
 		this.weights = weights;
 	}
 
+	/*
 	@Port(direction = Direction.INPUT, name = "Use DEFT", order = 4, defaultValue = "true")
 	public void setUseDeft(boolean unit) {
 		if (unit)
@@ -79,7 +80,7 @@ public class SRPValuesOp {
 		else
 			this.params.setLoadBalancer(LoadBalancer.PEFT);
 	}
-
+	*/
 	@Port(direction = Direction.INPUT, name = "Population Size", order = 5, defaultValue = "100")
 	public void setPopulationSize(int popul) {
 		this.params.setPopulationSize(popul);
@@ -109,7 +110,7 @@ public class SRPValuesOp {
 	//@Port(direction = Direction.OUTPUT,order =1000)
 	public void run() throws Exception {
 		NetworkTopology topology = projB.getNetworkTopologyBox().getNetworkTopology().copy();
-
+		this.params.setLoadBalancer(LoadBalancer.DEFT);
 		if (!this.minimizeMaxUsage) {
 			for (int i = 0; i < nruns && !cancel; i++) {
 				eaOspf = new JecoliPValueInteger(topology, demands, weights);

@@ -59,11 +59,6 @@ public class ComputeLoadsSRPValueOp {
 	}
 
 	
-	@Port(direction = Direction.INPUT, name = "Use DEFT", order = 4)
-	public void getUseDEFT(boolean usedeft) throws DimensionErrorException {
-		this.useDEFT=usedeft;
-	}
-	
 	
 	@Port(direction = Direction.INPUT, name = "Demands", order = 5)
 	public void getDemands(Demands demands) throws DimensionErrorException {
@@ -81,8 +76,6 @@ public class ComputeLoadsSRPValueOp {
 		results.addDemands(demands);
 		results.addWeights(weights);
 		LoadBalancer lb= LoadBalancer.DEFT;
-		if(!this.useDEFT)
-			lb=LoadBalancer.PEFT;
 		SRSimul simulator =new SRSimul(projB.getNetworkTopologyBox().getNetworkTopology().copy(),lb);
 		simulator.setConfigureSRPath(true);
 		simulator.computeLoads(weights, p, demands);		
